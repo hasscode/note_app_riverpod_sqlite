@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:note_app_sqlite_riverpod/notes/model/data_source/local_data_source.dart';
 import 'package:note_app_sqlite_riverpod/notes/model/models/note_model.dart';
 import 'package:note_app_sqlite_riverpod/notes/model/repository/notes_repository.dart';
@@ -6,11 +7,11 @@ import 'package:note_app_sqlite_riverpod/notes/model/repository/notes_repository
 import 'package:note_app_sqlite_riverpod/notes/view/screens/new_note_screen.dart';
 import 'package:note_app_sqlite_riverpod/notes/view/widgets/bottom_app_bar.dart';
 import 'package:note_app_sqlite_riverpod/notes/view/widgets/note_item_widget.dart';
-import 'package:note_app_sqlite_riverpod/tasks/model/data_source/local_data_source.dart';
+import 'package:note_app_sqlite_riverpod/notes/view_model/notes_riverpod_controller.dart';
 
-class NotesScreen extends StatelessWidget {
+class NotesScreen extends ConsumerWidget {
   NotesScreen({super.key});
-  List<NoteModel> notes = [
+  List<NoteModel> dummyNotes = [
     NoteModel(
       id: 1,
       title: 'Note One',
@@ -94,7 +95,8 @@ class NotesScreen extends StatelessWidget {
   ];
   NotesRepository notesRepository = NotesRepositoryImpl(LocalDataSourceImpl());
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,widgetRef) {
+    final notesState = widgetRef.watch(notesControllerProvider);
     return Scaffold(
       extendBody: true,
       floatingActionButton: FloatingActionButton(
@@ -167,18 +169,23 @@ class NotesScreen extends StatelessWidget {
                   horizontal: 12.0,
                   vertical: 24,
                 ),
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: notes.length,
-                  itemBuilder: (context, i) =>
-                      NoteItemWidget(noteModel: notes[i]),
-                ),
+                child: notesState.when(
+                    data: (notes)=>
+                        GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: notes.length,
+                          itemBuilder: (context, i) =>
+                              NoteItemWidget(noteModel: notes[i]),
+                        )
+                    , error: (error,context)=>Text(error.toString(),style: TextStyle(color: Colors.red),)
+
+                    , loading: ()=>CircularProgressIndicator(color: Colors.blue,)),
               ),
             ),
           ],

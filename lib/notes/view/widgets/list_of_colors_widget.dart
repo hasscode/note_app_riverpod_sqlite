@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:note_app_sqlite_riverpod/notes/view/widgets/color_item_widget.dart';
 class ListOfColorsWidget extends StatefulWidget {
-   const ListOfColorsWidget({super.key});
-
+   const ListOfColorsWidget({super.key,required this.onColorSelected});
+   final Function (Color)onColorSelected;
   @override
   State<ListOfColorsWidget> createState() => _ListOfColorsWidgetState();
 }
@@ -14,7 +14,9 @@ class _ListOfColorsWidgetState extends State<ListOfColorsWidget> {
   Colors.blueGrey,
   Colors.cyan,
   Colors.green,
-  Colors.yellow
+  Colors.yellow,
+  Colors.brown,
+  Colors.purple,
 ];
 
   int selectedIndex=0;
@@ -31,6 +33,7 @@ class _ListOfColorsWidgetState extends State<ListOfColorsWidget> {
                 onTap: (){
 setState(() {
   selectedIndex =i;
+  widget.onColorSelected(colors[i]);
 });
                 },
                 child: Padding(

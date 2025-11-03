@@ -8,8 +8,8 @@ class NotesRepositoryImpl implements NotesRepository{
   final  LocalDataSource localDataSource;
   NotesRepositoryImpl(this.localDataSource);
   @override
-  Future<Either<String, int>> deleteData(String sql) async{
-   return await localDataSource.deleteData(sql);
+  Future<Either<String, int>> deleteNote(String sql) async{
+   return await localDataSource.deleteNote(sql);
   }
 
   @override
@@ -37,8 +37,18 @@ List<NoteModel>  allNotes =(notes as List).map((note)=>NoteModel.fromSQL(note)).
   }
 
   @override
-  Future<Either<String, int>> updateData(String sql) async{
-return await localDataSource.updateData(sql);
+  Future<Either<String, int>> updateNote(NoteModel note) async {
+    final sql = '''
+    UPDATE notes
+    SET 
+      title = "${note.title}",
+      note = "${note.description}",
+      date = "${note.dateTime}",
+      color = ${note.color.value}
+    WHERE id = ${note.id}
+  ''';
+
+    return await localDataSource.updateData(sql);
   }
 
 }

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 class NoteModel{
-  final int id;
+  final int? id;
   final String title;
   final String description;
   final String dateTime;
@@ -13,7 +13,6 @@ factory NoteModel.fromSQL(Map<String,dynamic> sql){
 }
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'note': description,
       'date': dateTime,

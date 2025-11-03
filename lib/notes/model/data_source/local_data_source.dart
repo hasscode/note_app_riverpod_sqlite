@@ -7,7 +7,7 @@ abstract class LocalDataSource {
   Future<Either<String,List<Map<String ,dynamic>>>> readData(String sql);
   Future<Either<String, int>> insertData(String sql);
   Future<Either<String, int>> updateData(String sql);
-  Future<Either<String, int>> deleteData(String sql) ;
+  Future<Either<String, int>> deleteNote(String sql) ;
   Future<Either<String, Unit>> deleteMyDB();
 }
 
@@ -113,7 +113,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<Either<String, int>> deleteData(String sql) async {
+  Future<Either<String, int>> deleteNote(String sql) async {
     final dbResult = await getDatabase();
     if (dbResult.isLeft()) return Left(dbResult.fold((l) => l, (r) => ''));
 

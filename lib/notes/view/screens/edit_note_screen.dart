@@ -6,22 +6,26 @@ import 'package:note_app_sqlite_riverpod/notes/model/models/note_model.dart';
 import 'package:note_app_sqlite_riverpod/notes/view/widgets/list_of_colors_widget.dart';
 import 'package:note_app_sqlite_riverpod/notes/view_model/notes_riverpod_controller.dart';
 
-class NewNoteScreen extends StatefulWidget {
-  const NewNoteScreen({super.key});
+class EditNoteScreen extends StatefulWidget {
+  const EditNoteScreen({super.key,required this.noteModel});
 
   @override
-  State<NewNoteScreen> createState() => _NewNoteScreenState();
+  State<EditNoteScreen> createState() => _EditNoteScreenState();
 
+  final NoteModel noteModel ;
 }
 
-class _NewNoteScreenState extends State<NewNoteScreen> {
+class _EditNoteScreenState extends State<EditNoteScreen> {
 
   GlobalKey<FormState> formKey= GlobalKey();
   TextEditingController titleController =TextEditingController();
+
   TextEditingController noteController =TextEditingController();
   Color selectedColor = Colors.red;
   @override
   Widget build(BuildContext context) {
+    titleController.text =widget.noteModel.title;
+    noteController.text =widget.noteModel.description;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -74,7 +78,7 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
                     onPressed: () async{
 
                       final controller = ref.read(notesControllerProvider.notifier);
-                      await controller.addNotes(NoteModel(id: null, title: titleController.text, description: noteController.text, dateTime: DateTime.now().toString(), color: selectedColor));
+                      await controller.updateNote(NoteModel(id: widget.noteModel.id, title: titleController.text, description: noteController.text, dateTime: DateTime.now().toString(), color: selectedColor));
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
@@ -86,7 +90,7 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 13.0,horizontal: 100),
                       child: const Text(
-                        'Add Note',
+                        'Edit Note',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

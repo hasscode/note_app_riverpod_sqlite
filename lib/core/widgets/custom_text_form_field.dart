@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 class CustomTextFormField extends StatelessWidget {
-  const CustomTextFormField({super.key,required this.hintText,required this.maxLines,required this.title});
+  const CustomTextFormField({super.key,required this.hintText,required this.maxLines,required this.title,required this.textEditingController});
 final String hintText;
 final String title;
 final int maxLines;
+final TextEditingController textEditingController;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -12,6 +13,7 @@ final int maxLines;
         Text(title,style: TextStyle(fontSize: 15.5,fontFamily: 'Montserrat',fontWeight: FontWeight.w700,color: Colors.black,)),
 SizedBox(height: 10,),
         TextFormField(
+          controller: textEditingController,
           maxLines: maxLines,
           validator: (v){
             if(v==null||v.isEmpty){
